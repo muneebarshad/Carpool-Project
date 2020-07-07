@@ -19,25 +19,10 @@ class NavBar extends Component {
     const { user } = this.props.auth;
 
     return (
-//     <Navbar bg="light" expand="lg">
-//       <Navbar.Brand href="#home">Carpool Project</Navbar.Brand>
-//         <Navbar.Toggle aria-controls="basic-navbar-nav" />
-//           <Navbar.Collapse id="basic-navbar-nav">
-//             <Nav className="mr-auto">
-//               <Nav.Link href="/createRide">Create Ride</Nav.Link>
-//               <Nav.Link href="/myRides">My Rides</Nav.Link>
-//               <NavDropdown title="Account" id="basic-nav-dropdown">
-//                <NavDropdown.Item href="/accountInfo">{user.name}</NavDropdown.Item>
-//                 <NavDropdown.Divider />
-//                 <NavDropdown.Item onClick={this.onLogoutClick}>Logout</NavDropdown.Item>
-//               </NavDropdown>
-//     </Nav>
-    
-//   </Navbar.Collapse>
-// </Navbar>
+
 
         <Navbar bg="dark" variant="dark">
-        <Navbar.Brand href="">Carpool Project</Navbar.Brand>
+        <Navbar.Brand href="/dashboard">Carpool Project</Navbar.Brand>
         <Nav className="mr-auto">
           <Nav.Link href="/createRide">Create Ride</Nav.Link>
           <Nav.Link href="/myRides">My Rides</Nav.Link>

@@ -30,7 +30,7 @@ render() {
   console.log(this.state.getRides.length)
   let rideNotAvailable;
   if(this.state.getRides.length === 0){
-    rideNotAvailable = <p>Ride not available</p>
+    rideNotAvailable = <div id="rideNotAvailable">Ride not available</div>
   }
  
 return (

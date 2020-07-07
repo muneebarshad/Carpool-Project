@@ -3,12 +3,6 @@ a{
     font-size: 1.2em;
 }
 
-p{
-    font-family:serif;
-    font-size: 1.2em;
-    text-align: center;
-}
-
 span{
     font-family:serif;
     text-emphasis: bold;
@@ -24,10 +18,11 @@ span{
     background-color: #fafafa;
 }
 
-/* .rideItems{
-    width: 100%;
-    margin: auto;
-} */
+#rideNotAvailable{
+    font-family:serif;
+    font-size: 1.2em;
+    text-align: center;
+} 
 
 .rideItem{
     background-color: #dfdddb;
