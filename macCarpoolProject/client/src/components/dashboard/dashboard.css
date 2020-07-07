@@ -1,0 +1,52 @@
+a{
+    font-family:serif;
+    font-size: 1.2em;
+}
+
+p{
+    font-family:serif;
+    font-size: 1.2em;
+    text-align: center;
+}
+
+span{
+    font-family:serif;
+    text-emphasis: bold;
+    font-size: 1.2em;
+   
+
+}
+
+.main-container{
+    width: 100%;
+    margin-top: 20px;
+    padding:10px;
+    background-color: #fafafa;
+}
+
+/* .rideItems{
+    width: 100%;
+    margin: auto;
+} */
+
+.rideItem{
+    background-color: #dfdddb;
+    margin-top: 10px;
+    border-radius: 5px;
+    padding: 10px 5px;
+    display: inline-flex;
+    width: 100%;
+}
+
+.rideItem:hover{
+    background-color:#f0ecec;
+}
+
+.rideInfo{
+    width: 35%;
+}
+
+
+.selectRide{
+    margin: auto;
+}
