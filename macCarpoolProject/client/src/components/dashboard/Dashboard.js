@@ -54,7 +54,7 @@ return (
               <div className="Capcity"><BsPeople/> <a><span>Remaining Capacity: </span>{ride.remainingCapacity}/{ride.maxCapacity}</a></div>
             </div>
             <div className="selectRide">
-            <Button variant="success" disabled={ride.active}>Select Ride</Button>{' '}
+            <Button variant="success" disabled={ride.disabled}>Select Ride</Button>{' '}
             </div>
             
             </div>)

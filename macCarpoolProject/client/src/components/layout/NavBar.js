@@ -2,6 +2,7 @@ import { Nav, NavDropdown, Navbar } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './Layout.css'
 import React, { Component } from "react";
+import { Route, withRouter } from "react-router-dom";
 import { logoutUser } from "../../actions/authActions";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
@@ -10,9 +11,15 @@ import { connect } from "react-redux";
 
 // Home page - Login and register
 class NavBar extends Component {
+  constructor(props) {
+    super(props);
+    this.onLogoutClick = this.onLogoutClick.bind(this);
+}
+
   onLogoutClick = e => {
     e.preventDefault();
-    this.props.logoutUser();
+    this.props.logoutUser(this.props.history);  
+
   };
 
   render() {

@@ -11,8 +11,8 @@ import { Redirect } from 'react-router-dom';
 
 class CreateRide extends Component {
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       locationFrom: "",
       locationTo: "",
