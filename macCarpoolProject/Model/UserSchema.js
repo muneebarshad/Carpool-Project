@@ -13,6 +13,7 @@ const UserSchema = new Schema({
         locationFrom: {type: String, required: true},
         locationTo: {type: String, required: true},
         rideDate: {type: Date, required: true},
+        rideTime: {type: String, required: true},
         email: {type: String, required: true},
         disabled: {type: Boolean, required: true},
         maxCapacity: {type: Number,min: 1, max: 7, required: true},

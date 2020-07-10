@@ -2,42 +2,140 @@ import { Form, Col, Button } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './Layout.css';
 import Navbar from "./NavBar.js"
+import classnames from "classnames";
+
 
 import React, { Component } from "react";
+import { Redirect } from 'react-router-dom';
 
 
 class CreateRide extends Component {
 
+  constructor() {
+    super();
+    this.state = {
+      locationFrom: "",
+      locationTo: "",
+      rideDate: "",
+      rideTime: "",
+      email:"",
+      maxCapacity:"",
+      remainingCapacity:"",
+      disabled:"",
+      errors: {},
+      myRides:[]
+
+    };
+
+    this.handleChange = this.handleChange.bind(this);
+
+  }
+//Entering the input will change the state
+  handleChange(e){
+    this.setState({[e.target.id]: e.target.value});
+  }
+
+onSubmit = e => {
+    e.preventDefault();
+const newRideBody = {
+      locationFrom:this.state.locationFrom,
+      locationTo:  this.state.locationTo ,
+      rideDate:  this.state.rideDate ,
+      rideTime:  this.state.rideTime ,
+      email: "user01@hotmail.com" ,
+      maxCapacity: this.state.maxCapacity ,
+      remainingCapacity: this.state.maxCapacity ,
+      disabled: false 
+  };
+
+  let request = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(newRideBody),
+  };
+
+  fetch("/api/ride/createRide", request).then(res => {
+    if(res.status === 200){
+      this.props.history.push('/myRides')
+      
+    }else{
+      res.json().then(json => {
+        this.setState({errors:json})
+      })
+    }
+
+  })
+
+  };
+  
   
     render() {
+       const { errors } = this.state;
+       console.log(errors.maxCapacity)
   
       return (
         <div>
           <Navbar/>
 
           <div className="main-container">
-          <Form>
+          <Form onSubmit={this.onSubmit}>
             <Form.Row>
-              <Form.Group as={Col} controlId="fromLocation">
+              <Form.Group as={Col}>
                 <Form.Label>From</Form.Label>
-                <Form.Control type="text" placeholder="From Location" />
+                <input value={this.state.locationFrom} 
+                id="locationFrom" onChange={this.handleChange} 
+                type="text" 
+                placeholder="From Location" 
+                error={errors.locationFrom} 
+                className={classnames("", {
+                    invalid: errors.locationFrom
+                  })}/>
+                <label htmlFor="locationFrom"></label>
+                <span className="red-text">{errors.locationFrom}</span>
               </Form.Group>
 
-              <Form.Group as={Col} controlId="toLocation">
+              <Form.Group as={Col} >
                 <Form.Label>To</Form.Label>
-                <Form.Control type="text" placeholder="To Location" />
+                <input value={this.state.locationTo} 
+                id="locationTo" 
+                onChange={this.handleChange} 
+                type="text" 
+                placeholder="To Location"
+                className={classnames("", {
+                  invalid: errors.locationTo
+                })}/>
+                <label htmlFor="locationTo"></label>
+                <span className="red-text">{errors.locationTo}</span>
               </Form.Group>
             </Form.Row>
 
             <Form.Row>
-              <Form.Group as={Col} controlId="rideDate">
+              <Form.Group as={Col} >
                 <Form.Label>Date</Form.Label>
-                <Form.Control type="date" placeholder="Date" />
+                <input value={this.state.rideDate} 
+                id="rideDate" 
+                onChange={this.handleChange} 
+                type="date" 
+                className={classnames("", {
+                  invalid: errors.rideDate
+                })}/>
+                <label htmlFor="rideDate"></label>
+                <span className="red-text">{errors.rideDate}</span>
               </Form.Group>
 
-              <Form.Group as={Col} controlId="rideTime">
+              <Form.Group as={Col} >
                 <Form.Label>Time</Form.Label>
-                <Form.Control type="time" placeholder="Time" />
+                <input value={this.state.rideTime} 
+                id="rideTime" 
+                onChange={this.handleChange} 
+                type="time" 
+                className={classnames("", {
+                  invalid: errors.rideTime
+                })}/>
+                <label htmlFor="rideTime"></label>
+                <span className="red-text">{errors.rideTime}</span>
               </Form.Group>
 
             </Form.Row>
@@ -45,14 +143,18 @@ class CreateRide extends Component {
            
 
             <Form.Row>
-              {/* <Form.Group as={Col} controlId="maxCapacity">
-                <Form.Label>Max Capacity</Form.Label>
-                <Form.Control type="number" />
-              </Form.Group> */}
-
-              <Form.Group as={Col} controlId="maxCapacity">
-                <Form.Label>Max Capcity</Form.Label>
-                <Form.Control as="select" defaultValue="1">
+              
+              <Form.Group as={Col} >
+                <Form.Label>Max Capcity</Form.Label >
+                <Form.Control as="select" defaultValue="..." 
+                value={this.state.maxCapacity} 
+                id="maxCapacity" 
+                onChange={this.handleChange}
+                className={classnames("", {
+                  invalid: errors.maxCapacity
+                })}
+                >
+                  <option>...</option>
                   <option>1</option>
                   <option>2</option>
                   <option>3</option>
@@ -61,7 +163,10 @@ class CreateRide extends Component {
                   <option>6</option>
                   <option>7</option>
                 </Form.Control>
+                <label htmlFor="maxCapacity"></label>
+                <span className="red-text">{errors.maxCapacity}</span>
               </Form.Group>
+
 
               
             </Form.Row>

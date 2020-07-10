@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
 
+//Validation import
+const validateCreateRide = require("../../validation/createRide");
 
 // Load User model
 const User = require("../../Model/UserSchema");
@@ -10,16 +12,27 @@ const { reset } = require("nodemon");
 // @route PUT api/ride/createRide
 // @desc Create Ride for the specific User
 // @access Public
-router.put("/createRide", (req, res) => {
+router.post("/createRide", (req, res) => {
+
+    const { errors, isValid } = validateCreateRide(req.body);
+
+    // Check validation
+    if (!isValid) {
+
+      //403 forbidden
+    return res.status(400).json(errors);
+  }
+
     // New Ride object
     var newRide = {
         "email":req.body.email,
         "locationFrom": req.body.locationFrom,
         "locationTo": req.body.locationTo,
         "rideDate": req.body.rideDate,
-        "disabled": false,
-        "maxCapacity": 4,
-        "remainingCapacity": 4
+        "rideTime": req.body.rideTime,
+        "disabled": req.body.disabled,
+        "maxCapacity": req.body.maxCapacity,
+        "remainingCapacity": req.body.remainingCapacity
 
       };
       // Find a user with specific email and add ride to the user

@@ -49,9 +49,9 @@ return (
               <div className="locationFrom"><GoLocation/> <a><span>To: </span>{ride.locationTo}</a></div>
             </div>
             <div className="rideInfo">
-              <div className="Departure"><BsFillClockFill/> <a><span>Departure: </span>{ride.rideDate.split("T")[0]}</a></div>
-              <div className="Departure"><BsFillClockFill/> <a><span>Time: </span>{ride.rideDate.split("T")[1]}</a></div>
-              <div className="Capcity"><BsPeople/> <a><span>Capacity: </span>{ride.maxCapacity}/{ride.remainingCapacity}</a></div>
+              <div className="Departure"><BsFillClockFill/> <a><span>Date: </span>{ride.rideDate.split("T")[0]}</a></div>
+              <div className="Departure"><BsFillClockFill/> <a><span>Time: </span>{ride.rideTime}</a></div>
+              <div className="Capcity"><BsPeople/> <a><span>Remaining Capacity: </span>{ride.remainingCapacity}/{ride.maxCapacity}</a></div>
             </div>
             <div className="selectRide">
             <Button variant="success" disabled={ride.active}>Select Ride</Button>{' '}
