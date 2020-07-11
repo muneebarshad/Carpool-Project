@@ -1,5 +1,7 @@
 const express = require("express");
 const router = express.Router();
+const isEmpty = require("is-empty");
+
 
 //Validation import
 const validateCreateRide = require("../../validation/createRide");
@@ -71,7 +73,6 @@ router.get("/getRides", (req, res) => {
 
 });
 
-
 // @route Delete api/ride/removeRide
 // @desc Remove Ride
 // @access Public
@@ -81,9 +82,39 @@ router.delete("/removeRide", (req, res) => {
         res.send(user.myRides)
       })
     });
+});
+
+
+// @route Get api/ride/getRides
+// @desc Get user rides object in an array
+// @access Public
+router.post("/getMyRides", (req, res) => {
+  if(isEmpty(req.body.email)){
+     res.status(403).send("Email is required")
+  }
+  else{
+      // Find all rides for users
+    User.findOne({email: req.body.email}).then(user => {
+    // Create an object all rides
+    const allRides = [];
+    // For each user push the ride to allRides object
+    for (let index = 0; index < user.myRides.length; index++) {
+    allRides.push(user.myRides[index]);
+    }
+
+    if(allRides.length == 0){
+      res.status(200).send("You have created no Rides")
+    }else{
+    // Response all rides
+      res.status(200).send(allRides);
+    }
+
+    });
+  }
 
 
 });
+
 
 
 

@@ -19,7 +19,10 @@ const UserSchema = new Schema({
         maxCapacity: {type: Number,min: 1, max: 7, required: true},
         remainingCapacity: {type: Number,min: 1, max: 7, required: true},
         date: {type: Date, default: Date.now},
-        
+        passengers: [{
+            passenger: {type:String}
+        }]
+
     }]
 });
 

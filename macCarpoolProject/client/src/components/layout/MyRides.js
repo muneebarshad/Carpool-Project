@@ -1,11 +1,13 @@
 import React, { Component } from "react";
 import Navbar from "../layout/NavBar.js"
-import './dashboard.css';
+import '../dashboard/dashboard.css';
 import { Button } from 'react-bootstrap';
 import { BsPersonFill,BsFillClockFill, BsPeople } from "react-icons/bs";
 import { MdMyLocation  } from "react-icons/md";
 import {  GoLocation } from "react-icons/go";
-class Dashboard extends Component {
+import jwt_decode from "jwt-decode";
+
+class ManageRides extends Component {
 
   constructor(props){
     super(props);
@@ -16,21 +18,63 @@ class Dashboard extends Component {
   }
 
   callAPI(){
-    fetch("/api/ride/getRides")
+          // Set auth token header auth
+     const token = localStorage.jwtToken;
+     // Decode token and get user info and exp
+       const decoded = jwt_decode(token);
+       
+   const requestBody = {
+         email: decoded.email    
+     };
+   
+     let request = {
+       method: "POST",
+       headers: {
+         "Content-Type": "application/json",
+       },
+       body: JSON.stringify(requestBody),
+     };
+    fetch("/api/ride/getMyRides", request)
       .then(res => res.json())
       .then(res => this.setState({getRides: res}));
 
   }
+  
 
   componentWillMount(){
     this.callAPI();
   }
 
+  handleClick = (rideId, email) =>{
+    const requestBody = {
+      id:  rideId ,
+      email: email 
+    };
+
+    let request = {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(requestBody),
+    };
+
+    fetch("/api/ride/removeRide", request).then(res => {
+      if(res.status === 200){
+        this.callAPI(); 
+      }else{
+        alert("Not able to delete the ride")
+      }
+    });
+
+  }
+  
+
 render() {
   
   let rideNotAvailable;
   if(this.state.getRides.length === 0){
-    rideNotAvailable = <div id="rideNotAvailable">Ride not available</div>
+    rideNotAvailable = <div id="rideNotAvailable">You have created no Rides</div>
   }
  
 return (
@@ -59,8 +103,10 @@ return (
               <div className="Capcity"><BsPeople/> <a><span>Remaining Capacity: </span>{ride.remainingCapacity}/{ride.maxCapacity}</a></div>
             </div>
             <div className="selectRide">
-            <Button variant="success" disabled={ride.disabled}>Select Ride</Button>{' '}
+            <Button variant="danger" onClick={() => { this.handleClick(ride._id, ride.email) }} >Delete Ride</Button>{' '}
+            <Button variant="dark">Disable Ride</Button>{' '}
             </div>
+            
             
             </div>)
           }
@@ -82,4 +128,4 @@ return (
 }
 
 
-export default Dashboard;
+export default ManageRides;

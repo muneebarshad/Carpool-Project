@@ -3,10 +3,10 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './Layout.css';
 import Navbar from "./NavBar.js"
 import classnames from "classnames";
-
-
 import React, { Component } from "react";
 import { Redirect } from 'react-router-dom';
+import jwt_decode from "jwt-decode";
+
 
 
 class CreateRide extends Component {
@@ -37,12 +37,17 @@ class CreateRide extends Component {
 
 onSubmit = e => {
     e.preventDefault();
+    // Set auth token header auth
+     const token = localStorage.jwtToken;
+  // Decode token and get user info and exp
+    const decoded = jwt_decode(token);
+    
 const newRideBody = {
       locationFrom:this.state.locationFrom,
       locationTo:  this.state.locationTo ,
       rideDate:  this.state.rideDate ,
       rideTime:  this.state.rideTime ,
-      email: "user01@hotmail.com" ,
+      email: decoded.email ,
       maxCapacity: this.state.maxCapacity ,
       remainingCapacity: this.state.maxCapacity ,
       disabled: false 
