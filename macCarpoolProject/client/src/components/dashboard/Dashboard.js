@@ -5,6 +5,8 @@ import { Button } from 'react-bootstrap';
 import { BsPersonFill,BsFillClockFill, BsPeople } from "react-icons/bs";
 import { MdMyLocation  } from "react-icons/md";
 import {  GoLocation } from "react-icons/go";
+import jwt_decode from "jwt-decode";
+
 class Dashboard extends Component {
 
   constructor(props){
@@ -25,6 +27,40 @@ class Dashboard extends Component {
   componentWillMount(){
     this.callAPI();
   }
+
+
+  
+handleClick = (rideId) => {
+  // Set auth token header auth
+   const token = localStorage.jwtToken;
+// Decode token and get user info and exp
+  const decoded = jwt_decode(token);
+  
+const requestBody = {
+    email: decoded.email ,
+};
+
+let request = {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify(requestBody),
+};
+
+let URI = "/api/ride/selectRide/" + rideId;
+
+fetch(URI, request).then(res => {
+  if(res.status === 201){
+    this.callAPI();
+    
+  }else{
+    alert("Not able to select Ride")
+  }
+})
+
+};
+
 
 render() {
   
@@ -59,7 +95,7 @@ return (
               <div className="Capcity"><BsPeople/> <a><span>Remaining Capacity: </span>{ride.remainingCapacity}/{ride.maxCapacity}</a></div>
             </div>
             <div className="selectRide">
-            <Button variant="success" disabled={ride.disabled}>Select Ride</Button>{' '}
+            <Button variant="success" disabled={ride.disabled} onClick={() => { this.handleClick(ride._id) }}>Select Ride</Button>{' '}
             </div>
             
             </div>)

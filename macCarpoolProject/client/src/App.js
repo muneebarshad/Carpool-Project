@@ -14,6 +14,9 @@ import { Provider } from "react-redux";
 import store from "./store";
 import PrivateRoute from "./components/private-route/PrivateRoute";
 import Dashboard from "./components/dashboard/Dashboard";
+import ReactNotification from 'react-notifications-component'
+import 'react-notifications-component/dist/theme.css'
+
 
 // Check for token to keep user logged in
 if (localStorage.jwtToken) {
@@ -38,7 +41,10 @@ class App extends Component {
   render() {
     return (
       <Provider store={store}>
+
         <Router>
+        <ReactNotification />
+
           <div className="App">
             <Route exact path="/" component={Landing} />
             <Route exact path="/register" component={Register} />

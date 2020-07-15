@@ -126,9 +126,12 @@ return (
                   value={this.state.phone}
                   id="phone"
                   type="text"
+                  className={classnames("", {
+                    invalid: errors.phone
+                  })}
                 />
-                <label htmlFor="phone">Phone (Optional)</label>
-                <span className="red-text">{errors.password}</span>
+                <label htmlFor="phone">Phone</label>
+                <span className="red-text">{errors.phone}</span>
               </div>
               <div className="col s12" style={{ paddingLeft: "11.250px" }}>
                 <button

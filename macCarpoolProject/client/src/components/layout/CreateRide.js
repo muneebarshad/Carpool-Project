@@ -6,10 +6,12 @@ import classnames from "classnames";
 import React, { Component } from "react";
 import { Redirect } from 'react-router-dom';
 import jwt_decode from "jwt-decode";
+import { store } from 'react-notifications-component';
 
 
 
 class CreateRide extends Component {
+
 
   constructor(props) {
     super(props);
@@ -23,13 +25,16 @@ class CreateRide extends Component {
       remainingCapacity:"",
       disabled:"",
       errors: {},
-      myRides:[]
+      myRides:[],
 
     };
 
     this.handleChange = this.handleChange.bind(this);
+   
 
   }
+
+ 
 //Entering the input will change the state
   handleChange(e){
     this.setState({[e.target.id]: e.target.value});
@@ -50,7 +55,8 @@ const newRideBody = {
       email: decoded.email ,
       maxCapacity: this.state.maxCapacity ,
       remainingCapacity: this.state.maxCapacity ,
-      disabled: false 
+      disabled: false
+      
   };
 
   let request = {
@@ -63,12 +69,28 @@ const newRideBody = {
 
   fetch("/api/ride/createRide", request).then(res => {
     if(res.status === 200){
-      this.props.history.push('/myRides')
+      this.props.history.push('/myRides');
+      store.addNotification({
+        title: "Success",
+        message: "Ride Created!",
+        type: "success",
+        insert: "top",
+        container: "bottom-center",
+        animationIn: ["animated", "fadeIn"],
+        animationOut: ["animated", "fadeOut"],
+        dismiss: {
+          duration: 1000,
+          onScreen: false
+        }
+      });
+
       
     }else{
       res.json().then(json => {
         this.setState({errors:json})
       })
+
+      
     }
 
   })
@@ -78,7 +100,6 @@ const newRideBody = {
   
     render() {
        const { errors } = this.state;
-       console.log(errors.maxCapacity)
   
       return (
         <div>

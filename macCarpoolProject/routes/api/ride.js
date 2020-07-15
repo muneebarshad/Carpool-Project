@@ -20,9 +20,16 @@ router.post("/createRide", (req, res) => {
 
     // Check validation
     if (!isValid) {
-
       //403 forbidden
     return res.status(400).json(errors);
+  }
+
+  //If remianing capcity is 0 then ride can not be selected
+  let rideStatus;
+  if(req.body.remainingCapacity === "0"){
+    rideStatus = true
+  }else{
+    rideStatus = false
   }
 
     // New Ride object
@@ -32,7 +39,7 @@ router.post("/createRide", (req, res) => {
         "locationTo": req.body.locationTo,
         "rideDate": req.body.rideDate,
         "rideTime": req.body.rideTime,
-        "disabled": req.body.disabled,
+        "disabled": rideStatus,
         "maxCapacity": req.body.maxCapacity,
         "remainingCapacity": req.body.remainingCapacity
 
@@ -102,15 +109,102 @@ router.post("/getMyRides", (req, res) => {
     allRides.push(user.myRides[index]);
     }
 
-    if(allRides.length == 0){
-      res.status(200).send("You have created no Rides")
-    }else{
-    // Response all rides
-      res.status(200).send(allRides);
-    }
+    res.status(200).send(allRides);
 
     });
   }
+
+
+});
+
+
+// @route PUT api/ride/{rideID}/selectID
+// @desc Updates the remiaing capacity of the ride, adds ride to the users selected ride and updates the passenger list
+// @access Public
+router.post("/selectRide/:id", (req, res) => {
+  //Get passenger info and create a passenger object
+  let passengerName, passengerEmail, passengerPhone, passengerInfo
+
+  User.findOne({ email:  req.body.email}).then(user => {
+    passengerEmail = user.email
+    passengerName = user.name
+    passengerPhone = user.phone
+  
+
+   passengerInfo = {
+    passengerName: passengerName,
+    passengerEmail: passengerEmail,
+    passengerPhone: passengerPhone
+  }
+
+  //Update remaining capacity
+    User.findOne({"myRides._id":  req.params.id }).then(driver => {
+      
+      //Check if passeneger email and rider email is same  
+      riderEmail = driver.email;
+      if(passengerEmail == riderEmail){
+        res.status(403).json({Error: 'You can not select your own ride'})
+      }else{
+        //Get ride with id in params
+        ride = driver.myRides.id(req.params.id);
+        // Get the passenger list of the ride
+        passengerList = ride["passengers"];
+        // Get the remaining capacity of the ride
+        remainingCapacity = Number(ride["remainingCapacity"]);
+        // Get the max capacity of the ride
+        maxCapacity = Number(ride["maxCapacity"]);
+        // If remaining capcity is left then add the passenger to the ride
+        if( remainingCapacity > 0){
+
+
+          // update the remianing capacity 
+          remainingCapacity = maxCapacity - passengerList.length - 1;
+          // After updating if the capcity is 0 make the ride disabled for future passengers
+          if(remainingCapacity == 0){
+            ride["disabled"]= true;
+          }
+          // Add passneger object to the list and update user
+          ride["remainingCapacity"]= remainingCapacity.toString();
+          passengerList.push(passengerInfo);
+          ride["passengers"] = passengerList
+          driver.save();
+
+          const selectedRide = {
+            locationFrom: ride["locationFrom"],
+            locationTo: ride["locationTo"],
+            rideDate: ride["rideDate"],
+            rideTime: ride["rideTime"],
+            driver: {
+              driverName: driver.name,
+              driverEmail: driver.email,
+              driverPhone: driver.phone
+            }
+          }
+          User.findOne({ email: req.body.email}).then(passenger => {
+            selectedRidesList = passenger.selectedRides;
+            selectedRidesList.push(selectedRide);
+            passenger.save(function(err, updatedPassenger) {
+              if (err)
+                  res.send(err);
+              //Send updated user
+              res.status(201).json({ message: 'passenger updated!', data: updatedPassenger });
+            });
+            
+          });
+
+
+        //If remaining capacity is 0 then send error
+        }
+        else{
+          res.status(403).json({Error: 'Max capacity has been reached'})
+        }
+      }
+
+    });
+
+
+  });
+  
 
 
 });

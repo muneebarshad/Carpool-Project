@@ -104,11 +104,10 @@ return (
             </div>
             <div className="selectRide">
             <Button variant="danger" onClick={() => { this.handleClick(ride._id, ride.email) }} >Delete Ride</Button>{' '}
-            <Button variant="dark">Disable Ride</Button>{' '}
+            <Button variant="dark" href="/{ride._id}/passengers">Passenger List</Button>{' '}
             </div>
-            
-            
-            </div>)
+            </div>     
+            )
           }
          
       </div>
