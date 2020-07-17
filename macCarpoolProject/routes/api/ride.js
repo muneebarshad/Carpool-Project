@@ -41,7 +41,8 @@ router.post("/createRide", (req, res) => {
         "rideTime": req.body.rideTime,
         "disabled": rideStatus,
         "maxCapacity": req.body.maxCapacity,
-        "remainingCapacity": req.body.remainingCapacity
+        "remainingCapacity": req.body.remainingCapacity,
+        "selected":false
 
       };
       // Find a user with specific email and add ride to the user
@@ -60,6 +61,7 @@ router.post("/createRide", (req, res) => {
 // @desc Get all rides object in an array
 // @access Public
 router.get("/getRides", (req, res) => {
+
     // Find all rides for users
     User.find({}).then(users => {
           // Create an object all rides
@@ -81,7 +83,7 @@ router.get("/getRides", (req, res) => {
 });
 
 // @route Delete api/ride/removeRide
-// @desc Remove Ride
+// @desc Remove Ride (request body requires email and ride ID)
 // @access Public
 router.delete("/removeRide", (req, res) => {
     User.findOneAndUpdate({ email: req.body.email}, { $pull : {myRides: { _id: req.body.id } }}).then(user => {
@@ -92,8 +94,8 @@ router.delete("/removeRide", (req, res) => {
 });
 
 
-// @route Get api/ride/getRides
-// @desc Get user rides object in an array
+// @route POST api/ride/getMyRides
+// @desc POST user rides object in an array
 // @access Public
 router.post("/getMyRides", (req, res) => {
   if(isEmpty(req.body.email)){
@@ -114,11 +116,51 @@ router.post("/getMyRides", (req, res) => {
     });
   }
 
-
 });
 
 
-// @route PUT api/ride/{rideID}/selectID
+
+// @route POST api/ride/getSelectedRides
+// @desc Updates the selected ride array of the user and returns the user schema (res should path to data.selectedRides)
+// @access Public
+router.post("/getSelectedRides", (req, res) => {
+  const allRidesId = [];
+  if(isEmpty(req.body.email)){
+     res.status(403).send("Email is required")
+  }
+  else{
+    // /Check if Ride does not exists then delete the ride from selectedRide away from the user goven in the request body
+    // Store all rides into an array
+    User.find({}).then(users => { 
+      users.forEach((user) => {
+        for (let index = 0; index < user.myRides.length; index++) {
+          allRidesId.push(user.myRides[index]._id.toString());
+        }
+      });
+      
+      // If the selectedRides are not in the All rides array then pull and save in database
+      User.findOne({email: req.body.email}).then(user => {
+        selectedRidesList = user.selectedRides;
+        for (let index = 0; index < selectedRidesList.length; index++) {
+          selectedRideID = selectedRidesList[index]._id.toString();
+          if(!allRidesId.includes(selectedRideID)){
+            selectedRidesList.pull(selectedRidesList[index])
+          }
+        }
+
+        user.save(function(err, data) {
+          if (err)
+              res.send(err);
+          //Send updated user
+          res.status(200).send({ data });
+        });
+      });
+    })
+  }
+});
+
+
+// @route POST api/ride/{rideID}/selectID
 // @desc Updates the remiaing capacity of the ride, adds ride to the users selected ride and updates the passenger list
 // @access Public
 router.post("/selectRide/:id", (req, res) => {
@@ -129,7 +171,6 @@ router.post("/selectRide/:id", (req, res) => {
     passengerEmail = user.email
     passengerName = user.name
     passengerPhone = user.phone
-  
 
    passengerInfo = {
     passengerName: passengerName,
@@ -168,12 +209,12 @@ router.post("/selectRide/:id", (req, res) => {
           passengerList.push(passengerInfo);
           ride["passengers"] = passengerList
           driver.save();
-
           const selectedRide = {
             locationFrom: ride["locationFrom"],
             locationTo: ride["locationTo"],
             rideDate: ride["rideDate"],
             rideTime: ride["rideTime"],
+            _id: ride["_id"],
             driver: {
               driverName: driver.name,
               driverEmail: driver.email,
@@ -192,7 +233,6 @@ router.post("/selectRide/:id", (req, res) => {
             
           });
 
-
         //If remaining capacity is 0 then send error
         }
         else{
@@ -201,8 +241,6 @@ router.post("/selectRide/:id", (req, res) => {
       }
 
     });
-
-
   });
   
 

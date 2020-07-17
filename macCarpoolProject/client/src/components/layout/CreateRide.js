@@ -4,7 +4,6 @@ import './Layout.css';
 import Navbar from "./NavBar.js"
 import classnames from "classnames";
 import React, { Component } from "react";
-import { Redirect } from 'react-router-dom';
 import jwt_decode from "jwt-decode";
 import { store } from 'react-notifications-component';
 

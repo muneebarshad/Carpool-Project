@@ -33,6 +33,7 @@ class NavBar extends Component {
         <Nav className="mr-auto">
           <Nav.Link href="/createRide">Create Ride</Nav.Link>
           <Nav.Link href="/myRides">My Rides</Nav.Link>
+          <Nav.Link href="/selectedRides">Selected Rides</Nav.Link>
         </Nav>
         <NavDropdown title={user.name} id="account-dropdown">
                 <NavDropdown.Item href="/accountInfo">Profile</NavDropdown.Item>

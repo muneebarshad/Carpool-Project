@@ -19,6 +19,7 @@ const UserSchema = new Schema({
         maxCapacity: {type: Number,min: 1, max: 7, required: true},
         remainingCapacity: {type: Number,min: 0, max: 7, required: true},
         date: {type: Date, default: Date.now},
+        selected: {type: Boolean, required: true},
         passengers: [{
             passengerName: {type:String},
             passengerEmail: {type:String},

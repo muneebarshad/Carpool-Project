@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Landing from "./components/layout/Landing";
 import CreateRide from "./components/layout/CreateRide";
 import MyRides from "./components/layout/MyRides";
+import SelectedRides from "./components/layout/SelectRide";
 import Register from "./components/auth/Register";
 import Login from "./components/auth/Login";
 import './App.css';
@@ -53,6 +54,7 @@ class App extends Component {
               <PrivateRoute exact path="/dashboard" component={Dashboard} />
               <PrivateRoute exact path="/createRide" component={CreateRide} />
               <PrivateRoute exact path="/myRides" component={MyRides} />
+              <PrivateRoute exact path="/selectedRides" component={SelectedRides} />
 
             </Switch>
           </div>
