@@ -4,6 +4,8 @@ import Landing from "./components/layout/Landing";
 import CreateRide from "./components/layout/CreateRide";
 import MyRides from "./components/layout/MyRides";
 import SelectedRides from "./components/layout/SelectRide";
+import DriverInfo from "./components/layout/DriverInfo";
+import PassengerList from "./components/layout/PassengerList";
 import Register from "./components/auth/Register";
 import Login from "./components/auth/Login";
 import './App.css';
@@ -55,6 +57,10 @@ class App extends Component {
               <PrivateRoute exact path="/createRide" component={CreateRide} />
               <PrivateRoute exact path="/myRides" component={MyRides} />
               <PrivateRoute exact path="/selectedRides" component={SelectedRides} />
+              <PrivateRoute exact path="/:id/driver" component={DriverInfo} />
+              <PrivateRoute exact path="/:id/passengers" component={PassengerList} />
+
+
 
             </Switch>
           </div>

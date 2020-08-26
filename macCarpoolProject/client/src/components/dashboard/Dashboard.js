@@ -10,6 +10,7 @@ import { store } from 'react-notifications-component';
 
 
 class Dashboard extends Component {
+  
 
   constructor(props){
     super(props);
@@ -21,28 +22,33 @@ class Dashboard extends Component {
   }
 
   callAPI(){
-    fetch("/api/ride/getRides")
+       
+    let request = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": localStorage.jwtToken 
+
+      },
+    };
+
+    fetch("/api/ride/getRides",request)
       .then(res => res.json())
       .then(res => this.setState({getRides: res}));
 
   }
 
   callAPI2(){
-    // Set auth token header auth
-    const token = localStorage.jwtToken;
-     // Decode token and get user info and exp
-     const decoded = jwt_decode(token);
- 
-    const requestBody = {
-        email: decoded.email    
-    };
 
+ 
+   
     let request = {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": localStorage.jwtToken 
+
         },
-        body: JSON.stringify(requestBody),
       };
         
     fetch("/api/ride/getSelectedRides", request)
@@ -60,21 +66,14 @@ class Dashboard extends Component {
 
   
 handleClick = (rideId) => {
-  // Set auth token header auth
-   const token = localStorage.jwtToken;
-// Decode token and get user info and exp
-  const decoded = jwt_decode(token);
-  
-const requestBody = {
-    email: decoded.email ,
-};
 
 let request = {
   method: "POST",
   headers: {
     "Content-Type": "application/json",
+    "Authorization": localStorage.jwtToken 
+
   },
-  body: JSON.stringify(requestBody),
 };
 
 let URI = "/api/ride/selectRide/" + rideId;
@@ -107,6 +106,9 @@ fetch(URI, request).then(res => {
 };
 
 
+
+
+
 render() {
   //If no rides are available add "Ride not available"
   let rideNotAvailable;
@@ -124,6 +126,7 @@ render() {
       }
     } 
   }
+
  
 return (
       <div>
@@ -132,7 +135,7 @@ return (
 
         
       
-      <div className="main-container"> 
+      <div className="main-container">
       {/* Ride Object */}
       <div className="rideItems">
       {/* If ride not available */}
@@ -153,7 +156,7 @@ return (
             </div>
 
           {/* If the ride is selected make the button disable */}
-           {ride.selected ===false?<div className="selectRide"><Button variant="success" disabled={ride.disabled} onClick={() => { this.handleClick(ride._id) }}>Select Ride</Button></div>:<div className="selectRide"><Button variant="outline-success" disabled={true} >Selected</Button></div>}
+           {ride.email ===jwt_decode(localStorage.jwtToken).email ? null: ride.selected ===false?<div className="selectRide"><Button variant="success" disabled={ride.disabled} onClick={() => { this.handleClick(ride._id) }}>Select Ride</Button></div>:<div className="selectRide"><Button variant="outline-success" disabled={true} >Selected</Button></div>}
             </div>)
           }
          
@@ -161,11 +164,6 @@ return (
         
          
       </div>
-
-
-      
-
-      
            
       </div>
       

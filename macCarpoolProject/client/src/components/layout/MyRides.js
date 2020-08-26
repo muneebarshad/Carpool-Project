@@ -18,21 +18,14 @@ class ManageRides extends Component {
   }
 
   callAPI(){
-          // Set auth token header auth
-     const token = localStorage.jwtToken;
-     // Decode token and get user info and exp
-       const decoded = jwt_decode(token);
-       
-   const requestBody = {
-         email: decoded.email    
-     };
    
      let request = {
        method: "POST",
        headers: {
          "Content-Type": "application/json",
+         "Authorization": localStorage.jwtToken 
+
        },
-       body: JSON.stringify(requestBody),
      };
     fetch("/api/ride/getMyRides", request)
       .then(res => res.json())
@@ -45,16 +38,17 @@ class ManageRides extends Component {
     this.callAPI();
   }
 
-  handleClick = (rideId, email) =>{
+  handleClick = (rideId) =>{
     const requestBody = {
       id:  rideId ,
-      email: email 
     };
 
     let request = {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
+        "Authorization": localStorage.jwtToken 
+
       },
       body: JSON.stringify(requestBody),
     };
@@ -103,8 +97,8 @@ return (
               <div className="Capcity"><BsPeople/> <a><span>Remaining Capacity: </span>{ride.remainingCapacity}/{ride.maxCapacity}</a></div>
             </div>
             <div className="selectRide">
-            <Button variant="danger" onClick={() => { this.handleClick(ride._id, ride.email) }} >Delete Ride</Button>{' '}
-            <Button variant="dark" href="/{ride._id}/passengers">Passenger List</Button>{' '}
+            <Button variant="danger" onClick={() => { this.handleClick(ride._id) }} >Delete Ride</Button>{' '}
+            <Button variant="dark" href={"/" + ride._id + "/passengers"}>Passenger List</Button>{' '}
             </div>
             </div>     
             )

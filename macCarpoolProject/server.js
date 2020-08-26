@@ -19,7 +19,8 @@ const dbKeys = require("./config/keys").mongoURI;
 
 mongoose.connect( 
         dbKeys, 
-        {useNewUrlParser: true}
+        {useNewUrlParser: true},
+        
 )
 .then(() => console.log("mongoDB connected successfully"))
 .catch(err =>console.log(err));
