@@ -6,7 +6,6 @@ import classnames from "classnames";
 import React, { Component } from "react";
 import jwt_decode from "jwt-decode";
 import { store } from 'react-notifications-component';
-import { withScriptjs, withGoogleMap, GoogleMap, Marker } from "react-google-maps"
 
 
 
@@ -105,13 +104,6 @@ const newRideBody = {
     render() {
        const { errors } = this.state;
        
-      const MyMapComponent = withScriptjs(withGoogleMap((props) =>
-      <GoogleMap
-        defaultZoom={8}
-        defaultCenter={{ lat: 43.654, lng: -79.383 }}
-      >
-      </GoogleMap>
-      ))
   
       return (
         <div>
@@ -149,13 +141,6 @@ const newRideBody = {
               </Form.Group>
             </Form.Row>
 
-            <MyMapComponent 
-              googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyA5mJI-_VEzySSWaDEc_piImppY7A1bpco&v=3.exp&libraries=geometry,drawing,places"
-              loadingElement={<div style={{ height: `100%` }} />}
-              containerElement={<div style={{ height: `400px` }} />}
-              mapElement={<div style={{ height: `100%` }} />}
-            />
-            <br></br>
 
             <Form.Row>
               <Form.Group as={Col} >
